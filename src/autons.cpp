@@ -500,11 +500,11 @@ void skills() {
     chassis.pid_wait();
     chassis.pid_drive_set(-10_in,50);
     chassis.pid_wait();
-    chassis.pid_turn_set(0_deg,TURN_SPEED);
+    chassis.pid_turn_set(-45_deg,TURN_SPEED);
     chassis.pid_wait();
     chassis.pid_drive_set(15_in,50);
     chassis.pid_wait();
-    chassis.pid_turn_set(-45_deg,TURN_SPEED);
+    chassis.pid_turn_set(-135_deg,TURN_SPEED);
     chassis.pid_wait();
     chassis.pid_drive_set(-50_in,50);
     chassis.pid_wait();
@@ -515,6 +515,39 @@ void skills() {
     chassis.pid_wait();
     matchLoad.set(true);
     chassis.pid_drive_set(10_in, DRIVE_SPEED);
+    chassis.pid_wait();
+    matchLoad.set(false);
+    chassis.pid_turn_set(-90_deg, TURN_SPEED);
+    chassis.pid_wait();
+    chassis.pid_odom_set({{{65,0},rev, DRIVE_SPEED}});
+    chassis.pid_wait();
+    chassis.pid_drive_set(5,DRIVE_SPEED);
+    chassis.pid_wait();
+
+    chassis.pid_turn_set(0_deg, TURN_SPEED);
+    chassis.pid_wait();
+    chassis.pid_drive_set(-30,DRIVE_SPEED);
+    chassis.pid_wait();
+    chassis.pid_turn_set(-45_deg, TURN_SPEED);
+    chassis.pid_wait();
+    matchLoad.set(true);
+
+    chassis.pid_drive_set(-70, 90);
+    chassis.pid_wait();
+    chassis.pid_turn_set(135_deg, TURN_SPEED);
+    chassis.pid_wait();
+    chassis.pid_drive_set(-10, DRIVE_SPEED,true);
+    chassis.pid_wait();
+    intake.move((-127)*0.4);
+
+    chassis.pid_drive_set(10, DRIVE_SPEED);
+    chassis.pid_wait();
+    chassis.pid_turn_set(0_deg, TURN_SPEED);
+    chassis.pid_wait();
+    chassis.pid_drive_set(-60, DRIVE_SPEED);
+
+
+
 
 
 
