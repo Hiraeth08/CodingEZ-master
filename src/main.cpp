@@ -1,4 +1,5 @@
 #include "main.h"
+#include <type_traits>
 #include "EZ-Template/util.hpp"
 #include "autons.hpp"
 #include "pros/misc.h"
@@ -421,9 +422,10 @@ void opcontrol() {
     // if (master.get_digital_new_press(DIGITAL_R2)) {
     //       fire_lever_sequence();
     //     }
-    if (master.get_digital_new_press(DIGITAL_UP)) {
+    if (master.get_digital_new_press(DIGITAL_RIGHT)) {
             // This flips the current state and sends it to the function
-            setDescoreAngle(!isUp); 
+            setDescoreAngle(!isUp);
+
     
     }
     if (master.get_digital(DIGITAL_L2)){

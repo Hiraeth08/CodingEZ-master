@@ -191,11 +191,11 @@ void RedLeftFourRushWing() {
   
   chassis.pid_odom_set({{{14_in, 30_in}, fwd, DRIVE_SPEED}},
                        true);
-  chassis.pid_wait(); 
+  chassis.pid_wait_quick(); 
   chassis.pid_turn_set(90_deg, TURN_SPEED);
-  chassis.pid_wait();          
+  chassis.pid_wait_quick();          
   chassis.pid_drive_set(4_in, 127, false); // Alligner Lock
-  chassis.pid_wait();  // Long goal 
+  chassis.pid_wait_quick_chain();  // Long goal 
 
     //Scoring
   run_lever_sequence(50);
@@ -452,7 +452,7 @@ void skills() {
     chassis.pid_tuner_disable();
     ez::as::initialize();
     matchLoad.set(true);
-    lift.set(true);
+    lift.set(false);
     intake.move(127);
 
     pros::delay(1000);
@@ -481,39 +481,58 @@ void skills() {
     chassis.pid_wait();
     chassis.pid_drive_set(-60_in, DRIVE_SPEED);
     chassis.pid_wait();
-    lift.set(false);
+    lift.set(true);
+    chassis.pid_wait();
     chassis.pid_turn_set(-45_deg,TURN_SPEED);
     chassis.pid_wait();
-    chassis.pid_drive_set(-10_in,90);
+    intake.move(0);
+    chassis.pid_drive_set(-54_in,90);
     chassis.pid_wait();
+
+
     matchLoad.set(true);
-
-
-    chassis.pid_drive_set(-60_in,90);
     chassis.pid_wait();
-    chassis.pid_turn_set(45_deg,TURN_SPEED);
-    chassis.pid_wait();
-    chassis.pid_drive_set(10_in,50);
-    chassis.pid_wait();
-    run_lever_sequence(75);
-
-    chassis.pid_wait();
-    chassis.pid_drive_set(-10_in,50);
-    chassis.pid_wait();
-    chassis.pid_turn_set(-45_deg,TURN_SPEED);
+    chassis.pid_turn_set(45_deg,50);
     chassis.pid_wait();
     chassis.pid_drive_set(15_in,50);
     chassis.pid_wait();
+    intake.move((-127));
+    pros::c::delay(1000);
+    chassis.pid_wait();
+    intake.move(0);
+    chassis.pid_wait();
+    run_lever_sequence(75);
+    run_lever_sequence(50);
+    intake.move((-127)*0.4);
+    chassis.pid_wait();
+    intake.move(127);
+    chassis.pid_drive_set(-7_in,100);
+    chassis.pid_wait();
+    chassis.pid_drive_set(7_in,100);
+    chassis.pid_wait();
+    run_lever_sequence(50);
+    run_lever_sequence(60);
+
+    chassis.pid_wait();
+    matchLoad.set(false);
+
+    chassis.pid_drive_set(-15_in,50);
+    chassis.pid_wait();
+    chassis.pid_turn_set(-45_deg,TURN_SPEED);
+    chassis.pid_wait();
+    chassis.pid_drive_set(17_in,DRIVE_SPEED);
+    chassis.pid_wait_quick_chain();
     chassis.pid_turn_set(-135_deg,TURN_SPEED);
     chassis.pid_wait();
-    chassis.pid_drive_set(-50_in,50);
+    chassis.pid_drive_set(-55_in,50);
     chassis.pid_wait();
     chassis.pid_turn_set(180_deg,TURN_SPEED);
     chassis.pid_wait();
 
-    chassis.pid_drive_set(-10_in, DRIVE_SPEED);
+    chassis.pid_drive_set(-17_in, DRIVE_SPEED);
     chassis.pid_wait();
     matchLoad.set(true);
+    chassis.pid_wait();
     chassis.pid_drive_set(10_in, DRIVE_SPEED);
     chassis.pid_wait();
     matchLoad.set(false);
@@ -526,25 +545,25 @@ void skills() {
 
     chassis.pid_turn_set(0_deg, TURN_SPEED);
     chassis.pid_wait();
-    chassis.pid_drive_set(-30,DRIVE_SPEED);
+    chassis.pid_drive_set(-30_in,DRIVE_SPEED);
     chassis.pid_wait();
     chassis.pid_turn_set(-45_deg, TURN_SPEED);
     chassis.pid_wait();
     matchLoad.set(true);
 
-    chassis.pid_drive_set(-70, 90);
+    chassis.pid_drive_set(-70_in, 90);
     chassis.pid_wait();
     chassis.pid_turn_set(135_deg, TURN_SPEED);
     chassis.pid_wait();
-    chassis.pid_drive_set(-10, DRIVE_SPEED,true);
+    chassis.pid_drive_set(-10_in, DRIVE_SPEED,true);
     chassis.pid_wait();
     intake.move((-127)*0.4);
-
-    chassis.pid_drive_set(10, DRIVE_SPEED);
+    chassis.pid_wait();
+    chassis.pid_drive_set(10_in, DRIVE_SPEED);
     chassis.pid_wait();
     chassis.pid_turn_set(0_deg, TURN_SPEED);
     chassis.pid_wait();
-    chassis.pid_drive_set(-60, DRIVE_SPEED);
+    chassis.pid_drive_set(-60_in, DRIVE_SPEED);
 
 
 
@@ -566,9 +585,12 @@ void DiscoreAction() {
 
         // 1. TOGGLE LOGIC
         // get_digital_new_press ensures it only triggers once per button click
-        if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
             targetIsUp = !targetIsUp; // Flip the state
+        }else{
+            targetIsUp = !targetIsUp;
         }
+
 
         // 2. MOVEMENT & HOLDING LOGIC
         if (targetIsUp) {
