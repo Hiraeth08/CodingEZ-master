@@ -452,7 +452,7 @@ void skills() {
     chassis.pid_tuner_disable();
     ez::as::initialize();
     matchLoad.set(true);
-    lift.set(false);
+    lift.set(true);
     intake.move(127);
 
     pros::delay(1000);
@@ -481,7 +481,7 @@ void skills() {
     chassis.pid_wait();
     chassis.pid_drive_set(-60_in, DRIVE_SPEED);
     chassis.pid_wait();
-    lift.set(true);
+    lift.set(false);
     chassis.pid_wait();
     chassis.pid_turn_set(-45_deg,TURN_SPEED);
     chassis.pid_wait();
