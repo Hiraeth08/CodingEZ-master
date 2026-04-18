@@ -232,7 +232,7 @@ void run_lever_sequence(int velocity, int timeout_ms) {
     lever.move(0);
     lever.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     pros::delay(200);
-    gate.set(false);
+    // gate.set(false);
 
 
 }
