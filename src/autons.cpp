@@ -189,7 +189,7 @@ void RedLeftFourRushWing() {
   chassis.pid_wait_quick();  
   grab_red_reject_blue();
   
-  chassis.pid_odom_set({{{14_in, 30_in}, fwd, DRIVE_SPEED}},
+  chassis.pid_odom_set({{{14_in, 31_in}, fwd, DRIVE_SPEED}},
                        true);
   chassis.pid_wait_quick(); 
   chassis.pid_turn_set(90_deg, TURN_SPEED);
@@ -221,13 +221,14 @@ void RedLeftFourRushWing() {
   gate.set(false);
   matchLoad.set(false);
   lever.move_voltage(0);
-  chassis.pid_odom_set({{{18_in, 17.5_in}, rev, DRIVE_SPEED}},
+  chassis.pid_odom_set({{{18_in, 20_in}, rev, DRIVE_SPEED}},
                        true);
   chassis.pid_wait();
+  lift.set(true);
   chassis.pid_turn_set(90, TURN_SPEED);
   chassis.pid_wait();
   setDescoreAngle(!isUp);
-  chassis.pid_drive_set(10_in, DRIVE_SPEED);
+  chassis.pid_drive_set(12_in, DRIVE_SPEED);
   chassis.pid_wait();
 
   
@@ -369,10 +370,12 @@ void MiddleLast() {
   chassis.pid_odom_set({{{30_in, -4_in}, fwd, DRIVE_SPEED}},
                        true);
   chassis.pid_wait();
+  chassis.pid_odom_set(-10_in, DRIVE_SPEED);
 //   chassis.pid_turn_set(120_deg, TURN_SPEED);
   chassis.pid_wait();          
   // chassis.pid_drive_set(4_in, 127, false); // Alligner 
   // chassis.pid_wait();
+
   lift.set(false);
   run_lever_sequence(75);
   
@@ -380,7 +383,7 @@ void MiddleLast() {
   gate.set(false);
   matchLoad.set(false);
   lever.move_voltage(0);
-  chassis.pid_odom_set({{{30_in, -7_in}, rev, DRIVE_SPEED}},
+  chassis.pid_odom_set({{{30_in, -7_in}, fwd, DRIVE_SPEED}},
                        true);
   chassis.pid_wait();
   setDescoreAngle(!isUp);

@@ -78,7 +78,7 @@ void initialize() {
       {"9 Block Rush\n\nMatchload All Rush, Score, Wing", NineBlockRush},
       {"Middle Last\n\nMatchload All Rush, Score, Middle, Swing to Wing", MiddleLast},
       {"Blue \n\nMid Side Block Grab, Score, Matchload, Score, Wing", BlueleftFourBlocks},
-        {"lever Test", lever_more},
+      {"lever Test", lever_more},
 
       {"skills\n\nMatchload, Score 4 Blocks, Wing", skillsV2},
       {"skills V2\n\nMatchload, Score 4 Blocks, Wing", skills},
@@ -422,11 +422,15 @@ void opcontrol() {
     // if (master.get_digital_new_press(DIGITAL_R2)) {
     //       fire_lever_sequence();
     //     }
-    if (master.get_digital_new_press(DIGITAL_RIGHT)) {
+    if (master.get_digital(DIGITAL_RIGHT)) {
             // This flips the current state and sends it to the function
-            setDescoreAngle(!isUp);
+            setDescoreAngle(true);
+    
 
     
+
+    }else{
+            setDescoreAngle(false);
     }
     if (master.get_digital(DIGITAL_L2)){
       intake.move(127);
