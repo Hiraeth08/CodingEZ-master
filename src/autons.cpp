@@ -70,39 +70,7 @@ void default_constants() {
   chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there
 }
 
-void calibrateArms() {
-    // 1. Apply a gentle downward voltage. 
-    lever.move_voltage(-3000);
-    discore.move_voltage(-3000); 
-    // 2. Wait a tiny bit to give the motor time to actually start moving
-    pros::delay(250); 
-    // 3. Create tracking flags to know when each one is finished
-    bool lever_done = false;
-    bool discore_done = false;
-        
-    // 4. We hit the bottom! Stop the motor.
-
-    while (!lever_done || !discore_done) {
-        
-        // Check the lever (if it isn't done already)
-        if (!lever_done && std::abs(lever.get_actual_velocity()) <= 2) {
-            lever.move_voltage(0); // Stop the lever
-            lever_done = true;     // Mark it as finished
-        }
-
-        // Check the discore (if it isn't done already)
-        if (!discore_done && std::abs(discore.get_actual_velocity()) <= 2) {
-            discore.move_voltage(0); // Stop the discore
-            discore_done = true;     // Mark it as finished
-        }
-
-        pros::delay(20); // Standard PROS delay
-    }
-
-    // 5. THE CRITICAL STEP: Reset the encoder to exactly 0 at this physical position
-    lever.tare_position();
-    discore.tare_position(); 
-}
+ 
 
 
 
@@ -400,49 +368,52 @@ void SideBlockGrab() {
   // Wing
 }
 void skillsV2() {
+    chassis.initialize();
+    calibrateArms();
+    color_sensor.set_led_pwm(100);
+
+    master.rumble(chassis.drive_imu_calibrated() ? "." : "---");
+    chassis.pid_tuner_disable();
+    ez::as::initialize();
     matchLoad.set(true);
     lift.set(true);
     intake.move(127);
 
-    pros::delay(1000);
+    pros::delay(800);
     chassis.pid_wait();
     chassis.pid_drive_set(14_in, 50);
 
     chassis.pid_wait();
-    chassis.pid_drive_set(-10_in, 50);
+    chassis.pid_odom_set(-10_in, DRIVE_SPEED);
     chassis.pid_wait();
-    chassis.pid_drive_set(10_in,50);
+    chassis.pid_odom_set(10_in,DRIVE_SPEED);
     chassis.pid_wait();
     matchLoad.set(false);
-    chassis.pid_drive_set(-10.5,50);
+    chassis.pid_odom_set(-10.5,DRIVE_SPEED);
 
     chassis.pid_wait();
     chassis.pid_turn_set(90_deg,TURN_SPEED);
     chassis.pid_wait();
     chassis.pid_odom_set({{{-65,0},rev, DRIVE_SPEED}});
     chassis.pid_wait();
-    chassis.pid_drive_set(5_in, 50);
+    chassis.pid_drive_set(6_in, 50);
     chassis.pid_wait_quick();
-    chassis.pid_drive_set(-5_in, 50);
+    chassis.pid_drive_set(-6_in, 50);
     chassis.pid_wait();
-    lift.set(false);
-    
-    chassis.pid_odom_set({{{-9_in,35_in}, fwd, DRIVE_SPEED}});
+    chassis.odom_reset();
+    chassis.pid_drive_set(4_in, DRIVE_SPEED);
     chassis.pid_wait();
-    chassis.pid_turn_set(45_deg,TURN_SPEED);
-    pros::delay(1000);
-    run_lever_sequence(75);
-    setDescoreAngle(!isUp);
-    chassis.pid_wait();
-    chassis.pid_drive_set(-10_in,50);
 
+    chassis.pid_turn_set(-90_deg,TURN_SPEED);
     chassis.pid_wait();
-    chassis.pid_turn_set(175_deg,TURN_SPEED);
+    chassis.pid_odom_set(60_in, DRIVE_SPEED);
     chassis.pid_wait();
-    intake.move(127);
-    chassis.pid_drive_set(-15_in, 50);
+    chassis.odom_reset();
+
+    lift.set(false);
+    chassis.pid_turn_set(-46_deg,TURN_SPEED);
     chassis.pid_wait();
-    chassis.pid_drive_set(15_in,50);
+    intake.move(0);
 
 }
 
@@ -463,12 +434,12 @@ void skills() {
     chassis.pid_drive_set(14_in, 50);
 
     chassis.pid_wait();
-    chassis.pid_drive_set(-10_in, 50);
+    chassis.pid_odom_set(-10_in, 50);
     chassis.pid_wait();
-    chassis.pid_drive_set(10_in,50);
+    chassis.pid_odom_set(10_in,50);
     chassis.pid_wait();
     matchLoad.set(false);
-    chassis.pid_drive_set(-10.5,50);
+    chassis.pid_odom_set(-10.5,50);
 
     chassis.pid_wait();
     chassis.pid_turn_set(90_deg,TURN_SPEED);
@@ -485,20 +456,21 @@ void skills() {
 
     chassis.pid_turn_set(-90_deg,TURN_SPEED);
     chassis.pid_wait();
-    chassis.pid_drive_set(60_in, DRIVE_SPEED);
+    chassis.pid_odom_set(60_in, DRIVE_SPEED);
     chassis.pid_wait();
     chassis.odom_reset();
 
     lift.set(false);
-    chassis.pid_turn_set(-46_deg,TURN_SPEED);
+    chassis.pid_turn_set(-45_deg,TURN_SPEED);
     chassis.pid_wait();
     intake.move(0);
-    chassis.pid_drive_set(-55.7_in,110);
+    chassis.pid_drive_set(-56.4_in, DRIVE_SPEED);
     chassis.pid_wait();
+
 
     matchLoad.set(true);
     chassis.pid_wait();
-    chassis.pid_turn_set(45_deg,50);
+    chassis.pid_turn_set(45_deg,TURN_SPEED);
     chassis.pid_wait();
     lift.set(true);
     chassis.pid_wait();
@@ -510,47 +482,49 @@ void skills() {
     chassis.pid_wait();
     intake.move(0);
     chassis.pid_wait();
-    run_lever_sequence(40);
-    run_lever_sequence(40);
+    run_lever_sequence(70);
+    run_lever_sequence(80);
     intake.move((-127)*0.4);
     chassis.pid_wait();
+    lift.set(true);
     intake.move(127);
-    chassis.pid_drive_set(-10_in,100);
+    chassis.pid_odom_set(-15_in,100);
     chassis.pid_wait();
-    chassis.pid_drive_set(10_in,100);
+    chassis.pid_odom_set(15_in,100);
+    lift.set(false);
     chassis.pid_wait();
     pros::c::delay(800);
+    run_lever_sequence(50);
     run_lever_sequence(40);
-    run_lever_sequence(30);
     intake.move((-127)*0.4);
 
     chassis.pid_wait();
     matchLoad.set(false);
 
     chassis.odom_reset();
-    chassis.pid_drive_set(-15_in,50);
+    chassis.pid_odom_set(-15_in,50);
     chassis.pid_wait();
     gate.set(false);
 
     chassis.pid_turn_set(-45_deg,TURN_SPEED);
     chassis.pid_wait();
-    chassis.pid_drive_set(50_in,DRIVE_SPEED);
+    chassis.pid_odom_set(50_in,DRIVE_SPEED);
     chassis.pid_wait_quick_chain();
     chassis.pid_turn_set(-135_deg,TURN_SPEED);
     chassis.pid_wait();
-    chassis.pid_drive_set(-25.5_in,50);
+    chassis.pid_odom_set(-25.5_in,50);
     chassis.pid_wait();
     chassis.odom_reset();
-    chassis.pid_turn_set(-90,TURN_SPEED);
+    chassis.pid_turn_set(-90_deg,TURN_SPEED);
     chassis.pid_wait();
 
-    chassis.pid_drive_set(-14_in, 60);
+    chassis.pid_odom_set(-14_in, 60);
     chassis.pid_wait();
     matchLoad.set(true);
     pros::c::delay(500);
     chassis.pid_wait();
     intake.move(127);
-    chassis.pid_drive_set(5_in, DRIVE_SPEED);
+    chassis.pid_odom_set(5_in, DRIVE_SPEED);
     chassis.pid_wait();
     chassis.odom_reset();
     chassis.pid_turn_set(-90, TURN_SPEED);
@@ -558,13 +532,14 @@ void skills() {
     chassis.pid_wait();
     chassis.pid_drive_set(-80_in,100);
     chassis.pid_wait();
-    chassis.pid_drive_set(15,DRIVE_SPEED);
+    chassis.pid_drive_set(20_in,DRIVE_SPEED);
     chassis.pid_wait();
     chassis.odom_reset();
 
-    chassis.pid_turn_set(-135,TURN_SPEED);
+    chassis.pid_turn_set(-135_deg,TURN_SPEED);
     chassis.pid_wait();
-    chassis.pid_drive_set(-50,30);
+    chassis.pid_odom_set(-50_in,30);
+    chassis.pid_wait();
     intake.move((-127)*0.4);
 
 }

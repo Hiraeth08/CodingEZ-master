@@ -78,7 +78,7 @@ void initialize() {
       {"9 Block Rush\n\nMatchload All Rush, Score, Wing", NineBlockRush},
       {"Middle Last\n\nMatchload All Rush, Score, Middle, Swing to Wing", MiddleLast},
       {"Blue \n\nMid Side Block Grab, Score, Matchload, Score, Wing", BlueleftFourBlocks},
-      {"lever Test", lever_more},
+        {"lever Test", lever_more},
 
       {"skills\n\nMatchload, Score 4 Blocks, Wing", skillsV2},
       {"skills V2\n\nMatchload, Score 4 Blocks, Wing", skills},
