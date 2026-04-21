@@ -239,7 +239,7 @@ void run_lever_sequence(int velocity, int timeout_ms) {
 bool isUp = false;
 
 // Positions in degrees (Adjust these based on your robot)
-const int DOWN_ANGLE =  280;
+const int DOWN_ANGLE =  290;
 const int UP_ANGLE = 420; // Example: 450 degrees
 
 void setDescoreAngle(bool goUp) {

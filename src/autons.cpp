@@ -70,7 +70,39 @@ void default_constants() {
   chassis.pid_angle_behavior_set(ez::shortest);  // Changes the default behavior for turning, this defaults it to the shortest path there
 }
 
- 
+void calibrateArms() {
+    // 1. Apply a gentle downward voltage. 
+    lever.move_voltage(-3000);
+    discore.move_voltage(-3000); 
+    // 2. Wait a tiny bit to give the motor time to actually start moving
+    pros::delay(250); 
+    // 3. Create tracking flags to know when each one is finished
+    bool lever_done = false;
+    bool discore_done = false;
+        
+    // 4. We hit the bottom! Stop the motor.
+
+    while (!lever_done || !discore_done) {
+        
+        // Check the lever (if it isn't done already)
+        if (!lever_done && std::abs(lever.get_actual_velocity()) <= 2) {
+            lever.move_voltage(0); // Stop the lever
+            lever_done = true;     // Mark it as finished
+        }
+
+        // Check the discore (if it isn't done already)
+        if (!discore_done && std::abs(discore.get_actual_velocity()) <= 2) {
+            discore.move_voltage(0); // Stop the discore
+            discore_done = true;     // Mark it as finished
+        }
+
+        pros::delay(20); // Standard PROS delay
+    }
+
+    // 5. THE CRITICAL STEP: Reset the encoder to exactly 0 at this physical position
+    lever.tare_position();
+    discore.tare_position(); 
+}
 
 
 
@@ -540,8 +572,27 @@ void skills() {
     chassis.pid_wait();
     chassis.pid_odom_set(-50_in,30);
     chassis.pid_wait();
+    lift.set(false);
     intake.move((-127)*0.4);
-
+    chassis.pid_wait_quick_chain();
+    chassis.pid_odom_set(10_in,50);
+    chassis.pid_wait();
+    chassis.pid_turn_set(-90, TURN_SPEED);
+    chassis.pid_wait();
+    chassis.pid_odom_set(-60_in, DRIVE_SPEED);
+    chassis.pid_wait_quick_chain();
+    chassis.pid_turn_set(0, TURN_SPEED);
+    chassis.pid_wait_quick_chain();
+    chassis.pid_odom_set(20_in, DRIVE_SPEED);
+    chassis.pid_wait_quick_chain();
+    chassis.pid_turn_set(90, TURN_SPEED);
+    chassis.pid_wait_quick_chain();
+    chassis.pid_odom_set(17_in, DRIVE_SPEED);
+    chassis.pid_wait();
+    chassis.pid_turn_set(0, TURN_SPEED);
+    chassis.pid_wait();
+    chassis.pid_odom_set(20_in, DRIVE_SPEED);
+    
 }
 
 void DiscoreAction() {
