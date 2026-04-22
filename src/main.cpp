@@ -211,7 +211,7 @@ void run_lever_sequence(int velocity, int timeout_ms) {
 
     while (std::abs(lever.get_actual_velocity()) > (std::abs(velocity) * 0.1)) {
         if (pros::millis() - startTime > timeout_ms) break; 
-        pros::delay(10);
+        pros::delay(100);
     }
 
     // --- STEP 2: MOVE DOWN (The Missing Part) ---
