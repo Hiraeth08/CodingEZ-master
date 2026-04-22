@@ -195,15 +195,15 @@ void RedLeftFourRushWing() {
   chassis.pid_turn_set(90_deg, TURN_SPEED);
   chassis.pid_wait_quick();          
   chassis.pid_drive_set(4_in, 127, false); // Alligner Lock
-  chassis.pid_wait_quick_chain();  // Long goal 
+  pros::delay(500);  // Long goal 
 
     //Scoring
-  run_lever_sequence(50);
+  run_lever_sequence(100);
   pros::c::delay(500);  // Turn the intake off
   intake.move(270);
   matchLoad.set(true);
 
-  chassis.pid_wait();
+  pros::c::delay(1000);
   chassis.pid_odom_set(-36_in, 50);
   chassis.pid_wait_until_index(1);  
   pros::delay(2000);
